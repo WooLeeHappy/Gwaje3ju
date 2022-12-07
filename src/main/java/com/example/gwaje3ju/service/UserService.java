@@ -2,11 +2,13 @@ package com.example.gwaje3ju.service;
 
 
 import com.example.gwaje3ju.dto.LoginRequestDto;
+import com.example.gwaje3ju.dto.ResponseDto;
 import com.example.gwaje3ju.dto.SignupRequestDto;
 import com.example.gwaje3ju.entity.User;
 import com.example.gwaje3ju.jwt.JwtUtil;
 import com.example.gwaje3ju.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,9 +27,11 @@ public class UserService {
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Transactional
-    public void signup(SignupRequestDto signupRequestDto) {
+    public ResponseDto signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
         String password = signupRequestDto.getPassword();
+        // 회원가입 조건 확인
+//        if(username )
 
         // 회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
@@ -40,6 +44,8 @@ public class UserService {
 
         User user = new User(username, password, email);
         userRepository.save(user);
+
+        return new ResponseDto("회원가입 성공", HttpStatus.OK.value());
     }
 
     @Transactional
