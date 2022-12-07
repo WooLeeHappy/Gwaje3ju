@@ -8,6 +8,7 @@ import com.example.gwaje3ju.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -17,15 +18,15 @@ public class PostController {
 
     private final PostService postService;
 
-
+    // 포스트 생성하기
     @PostMapping("/post")
-    public PostResponseDto savePost(@RequestBody PostRequestDto requestDto) {
-        return postService.savepost(requestDto);
+    public PostResponseDto savePost(@RequestBody PostRequestDto requestDto, HttpServletRequest request) {
+        return postService.savepost(requestDto, request);
     }
 
     @GetMapping("/posts")
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
+    public List<PostResponseDto> getPosts(HttpServletRequest request) {
+        return postService.getPosts(request);
     }
 
     @GetMapping("/post/{id}")
