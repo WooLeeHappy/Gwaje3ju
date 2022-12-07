@@ -1,7 +1,6 @@
 package com.example.gwaje3ju.controller;
 
 
-import com.example.gwaje3ju.dto.PostPasswordDto;
 import com.example.gwaje3ju.dto.PostRequestDto;
 import com.example.gwaje3ju.dto.PostResponseDto;
 import com.example.gwaje3ju.service.PostService;
@@ -19,14 +18,14 @@ public class PostController {
     private final PostService postService;
 
     // 포스트 생성하기
-    @PostMapping("/post")
+    @PostMapping("/posting")
     public PostResponseDto savePost(@RequestBody PostRequestDto requestDto, HttpServletRequest request) {
         return postService.savepost(requestDto, request);
     }
 
     @GetMapping("/posts")
-    public List<PostResponseDto> getPosts(HttpServletRequest request) {
-        return postService.getPosts(request);
+    public List<PostResponseDto> getPosts() {
+        return postService.getPosts();
     }
 
     @GetMapping("/post/{id}")
@@ -35,13 +34,13 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
-        return postService.updatePost(id, requestDto);
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, HttpServletRequest request) {
+        return postService.updatePost(id, requestDto, request);
     }
 
     @DeleteMapping("/post/{id}")
-    public boolean delete(@PathVariable Long id, @RequestBody PostPasswordDto passwordDto) {
-        return postService.delete(id, passwordDto);
+    public boolean delete(@PathVariable Long id, HttpServletRequest request) {
+        return postService.delete(id, request);
     }
 
 }

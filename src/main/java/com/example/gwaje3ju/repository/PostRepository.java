@@ -1,22 +1,23 @@
 package com.example.gwaje3ju.repository;
 
 import com.example.gwaje3ju.entity.Post;
+import com.example.gwaje3ju.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
-    Optional<Post> findByIdAndPassword(Long id, String password);
 
-    List<Post> findAllByUserId(Long userId);
-    Optional<Post> findByIdAndUserId(Long id, Long userId);
-    Page<Post> findAll(Pageable pageable);
-    Page<Post> findAllByUserIdAndFolderList_Id(Long userId, Long folderId, Pageable pageable);
-    Optional<Post> findByIdAndFolderList_Id(Long productId, Long folderId);
+public interface PostRepository extends JpaRepository<Post, Long> {
+    Optional<Post> findById(Long id);
+    Optional<Post> findByIdAndUser(Long id, User user);
+    List<Post> findAllPostByModifiedAtDesc();
+
+
 }
 
 // 1 Entity 2 Controller, service, repository 자바 파일만 만든다.

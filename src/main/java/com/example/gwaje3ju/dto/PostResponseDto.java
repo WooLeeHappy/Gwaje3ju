@@ -20,8 +20,6 @@ public class PostResponseDto {
     public PostResponseDto(Post post) {
         this.title = post.getTitle();
         this.desc = post.getDesc();
-        this.userName = post.getUserName();
         this.id = post.getId();
-        this.password = post.getPassword();
     }
 }

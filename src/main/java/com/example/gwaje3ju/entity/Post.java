@@ -2,6 +2,7 @@ package com.example.gwaje3ju.entity;
 
 
 import com.example.gwaje3ju.dto.PostRequestDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,11 +23,7 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String desc;
 
-    @Column(nullable = false)
-    private String userName;
 
-    @Column(nullable = false)
-    private String password;
 
     @ManyToOne
     @JoinColumn
@@ -35,15 +32,13 @@ public class Post extends Timestamped {
     public Post(PostRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.desc = requestDto.getDesc();
-        this.userName = requestDto.getUserName();
-        this.password = requestDto.getPassword();
+
         this.user = user;
     }
 
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.desc = requestDto.getDesc();
-        this.userName = requestDto.getUserName();
-        this.password = requestDto.getPassword();
+
     }
 }

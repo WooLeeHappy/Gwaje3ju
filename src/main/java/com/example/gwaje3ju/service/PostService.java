@@ -1,7 +1,6 @@
 package com.example.gwaje3ju.service;
 
 
-import com.example.gwaje3ju.dto.PostPasswordDto;
 import com.example.gwaje3ju.dto.PostRequestDto;
 import com.example.gwaje3ju.dto.PostResponseDto;
 import com.example.gwaje3ju.entity.Post;
@@ -60,7 +59,33 @@ public class PostService {
         }
     }
     @Transactional
-    public List<PostResponseDto> getPosts(HttpServletRequest request) {
+    public List<PostResponseDto> getPosts() {
+
+            List<PostResponseDto> list = new ArrayList<>();
+            List<Post> postList = postRepository.findAllPostByModifiedAtDesc();
+
+            for ( Post post : postList) {
+                list.add(new PostResponseDto(post));
+            }
+            return list;
+
+        }
+
+
+
+
+    @Transactional
+    public PostResponseDto getPost(Long id) {
+        Optional<Post> a = postRepository.findById(id);
+        Post v = a.get();
+        PostResponseDto postResponseDto = new PostResponseDto(v);
+        return postResponseDto;
+    }
+
+
+    @Transactional
+    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
+
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -75,51 +100,43 @@ public class PostService {
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new IllegalArgumentException("해당글의 주인이 아닙니다.")
             );
 
-            List<PostResponseDto> list = new ArrayList<>();
-            List<Post> postList;
-
-            postList = postRepository.findAllByUserId(user.getId());
-
-            for ( Post post : postList) {
-                list.add(new PostResponseDto(post));
-            }
-            return list;
-
+            Post post = postRepository.findByIdAndUser(id, user).orElseThrow(
+                    () -> new RuntimeException("게시글이 존재하지 않습니다."));
+            System.out.println(post);
+            post.update(postRequestDto);
+            PostResponseDto responseDto = new PostResponseDto(post);
+            return responseDto;
         } else {
             return null;
         }
     }
 
 
-
     @Transactional
-    public PostResponseDto getPost(Long id) {
-        Optional<Post> a = postRepository.findById(id);
-        Post v = a.get();
-        PostResponseDto postResponseDto = new PostResponseDto(v);
-        return postResponseDto;
-    }
+    public boolean delete(Long id, HttpServletRequest request) {
 
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
 
-    @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto) {
-        Post post = postRepository.findByIdAndPassword(id, postRequestDto.getPassword()).orElseThrow(
-                () -> new RuntimeException("ㅜㅜ"));
-        post.update(postRequestDto);
-        PostResponseDto responseDto = new PostResponseDto(post);
-        return responseDto;
-    }
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("해당글의 주인이 아닙니다.")
+            );
 
-    @Transactional
-    public boolean delete(Long id, PostPasswordDto passwordDto) {
-        Post post = postRepository.findByIdAndPassword(id, passwordDto.getPassword()).orElseThrow(
-                () -> new RuntimeException("ㅠㅠ"));
-        postRepository.deleteById(id);
+            postRepository.deleteById(id);
+
+        }
         return true;
-
     }
-
 }
