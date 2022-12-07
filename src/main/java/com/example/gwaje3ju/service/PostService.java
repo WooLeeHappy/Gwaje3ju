@@ -62,7 +62,7 @@ public class PostService {
     public List<PostResponseDto> getPosts() {
 
             List<PostResponseDto> list = new ArrayList<>();
-            List<Post> postList = postRepository.findAllPostByModifiedAtDesc();
+            List<Post> postList = postRepository.findAll();
 
             for ( Post post : postList) {
                 list.add(new PostResponseDto(post));

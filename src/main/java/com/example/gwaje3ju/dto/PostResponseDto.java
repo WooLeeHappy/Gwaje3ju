@@ -14,8 +14,6 @@ public class PostResponseDto {
     private Long id;
     private String title;
     private String desc;
-    private String userName;
-    private String password;
 
     public PostResponseDto(Post post) {
         this.title = post.getTitle();

@@ -15,8 +15,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long id);
     Optional<Post> findByIdAndUser(Long id, User user);
-    List<Post> findAllPostByModifiedAtDesc();
-
+    List<Post> findAll();
 
 }
 
